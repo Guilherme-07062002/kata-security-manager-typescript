@@ -16,15 +16,17 @@ const SuccessCase = () => {
     .mockImplementationOnce(() => '12345678');
 }
 
+var callCount = 0;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  callCount++;
+});
+
 jest.mock('prompt-sync', () => {
-  // Counter to control how many times the mock function is called
-  let callCount = 0;
   return jest.fn().mockImplementation(() => {
-    jest.clearAllMocks();
-    callCount++;
-    if (callCount === 2) {
-      return passwordsDontMatchCase();
-    }
+    if (callCount === 2) return passwordsDontMatchCase();
+
     return SuccessCase();
   });
 });
