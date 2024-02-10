@@ -1,6 +1,8 @@
-import { SecurityManager, ReversePasswordEncrypter } from "./security-manager";
+import { SecurityManager, ReversePasswordEncrypter, PromptSyncAdapter } from "./security-manager";
 
 const passwordEncrypter = new ReversePasswordEncrypter();
-const securityManager = new SecurityManager(passwordEncrypter);
+const promptSync = new PromptSyncAdapter();
+
+const securityManager = new SecurityManager(passwordEncrypter, promptSync);
 
 securityManager.createUser();

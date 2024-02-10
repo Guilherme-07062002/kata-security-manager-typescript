@@ -11,23 +11,35 @@ export class ReversePasswordEncrypter implements PasswordEncrypter {
   }
 }
 
+export interface Prompt {
+  getUserInput(): string;
+}
+
+export class PromptSyncAdapter implements Prompt {
+  getUserInput(): string {
+    const prompt = promptSync();
+    return prompt("");
+  }
+}
+
 export class SecurityManager {
-  constructor(private readonly passwordEncrypter: PasswordEncrypter) { }
+  constructor(
+    private readonly passwordEncrypter: PasswordEncrypter,
+    private readonly prompt: Prompt
+  ) { }
 
   public createUser() {
-    const prompt = promptSync();
-
     console.log("Enter a username");
-    const username = prompt('');
+    const username = this.prompt.getUserInput();
 
     console.log("Enter your full name");
-    const fullName = prompt("");
+    const fullName = this.prompt.getUserInput();
 
     console.log("Enter your password");
-    const password = prompt("");
+    const password = this.prompt.getUserInput();
 
     console.log("Re-enter your password");
-    const confirmPassword = prompt("");
+    const confirmPassword = this.prompt.getUserInput();
 
     if (password != confirmPassword) {
       console.log("The passwords don't match");
