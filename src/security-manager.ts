@@ -23,13 +23,17 @@ export default class SecurityManager {
     }
 
     // Encrypt the password (just reverse it, should be secure)
-    var array = password.split("");
-    const passwordreversed = array.reverse();
+    const passwordreversed = this.passwordEncrypt(password);
 
     console.log(
       `Saving Details for User (${username}, ${fullName}, ${passwordreversed.join(
         ""
       )})\n`
     );
+  }
+
+  protected static passwordEncrypt(password: string) {
+    var array = password.split("");
+    return array.reverse();
   }
 }
