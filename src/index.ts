@@ -1,6 +1,5 @@
-import { SecurityManager, PromptSyncAdapter } from "./security-manager";
-import { ReversePasswordEncrypter } from "./infra";
-
+import { SecurityManager } from "./security-manager";
+import { ReversePasswordEncrypter, PromptSyncAdapter } from "./infra";
 
 const passwordEncrypter = new ReversePasswordEncrypter();
 const promptSync = new PromptSyncAdapter();

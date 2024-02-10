@@ -1,12 +1,4 @@
 import { PasswordEncrypter, Prompt } from "./domain";
-import promptSync from "prompt-sync";
-
-export class PromptSyncAdapter implements Prompt {
-  getUserInput(): string {
-    const prompt = promptSync();
-    return prompt("");
-  }
-}
 
 export class SecurityManager {
   constructor(
