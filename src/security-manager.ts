@@ -2,15 +2,15 @@ import promptSync from "prompt-sync";
 
 export default class SecurityManager {
   public static createUser() {
-    var prompt = promptSync();
+    const prompt = promptSync();
     console.log("Enter a username");
-    var username = prompt('');
+    const username = prompt('');
     console.log("Enter your full name");
-    var fullName = prompt("");
+    const fullName = prompt("");
     console.log("Enter your password");
-    var password = prompt("");
+    const password = prompt("");
     console.log("Re-enter your password");
-    var confirmPassword = prompt("");
+    const confirmPassword = prompt("");
 
     if (password != confirmPassword) {
       console.log("The passwords don't match");
@@ -33,7 +33,7 @@ export default class SecurityManager {
   }
 
   protected static passwordEncrypt(password: string) {
-    var array = password.split("");
+    const array = password.split("");
     return array.reverse();
   }
 }
