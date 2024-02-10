@@ -1,7 +1,20 @@
 import promptSync from "prompt-sync";
 
-export default class SecurityManager {
-  public static createUser() {
+export interface PasswordEncrypter {
+  encrypt(password: string): string;
+}
+
+export class ReversePasswordEncrypter implements PasswordEncrypter {
+  encrypt(password: string): string {
+    const array = password.split("");
+    return array.reverse().join("");
+  }
+}
+
+export class SecurityManager {
+  constructor(private readonly passwordEncrypter: PasswordEncrypter) { }
+
+  public createUser() {
     const prompt = promptSync();
 
     console.log("Enter a username");
@@ -26,13 +39,8 @@ export default class SecurityManager {
       return;
     }
 
-    const passwordEncrypted = this.passwordEncrypt(password);
+    const passwordEncrypted = this.passwordEncrypter.encrypt(password);
 
     console.log(`Saving Details for User (${username}, ${fullName}, ${passwordEncrypted})\n`);
-  }
-
-  protected static passwordEncrypt(password: string): string {
-    const array = password.split("");
-    return array.reverse().join("");
   }
 }

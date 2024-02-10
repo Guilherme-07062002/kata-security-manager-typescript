@@ -1,3 +1,6 @@
-import SecurityManager from "./security-manager";
+import { SecurityManager, ReversePasswordEncrypter } from "./security-manager";
 
-SecurityManager.createUser();
+const passwordEncrypter = new ReversePasswordEncrypter();
+const securityManager = new SecurityManager(passwordEncrypter);
+
+securityManager.createUser();

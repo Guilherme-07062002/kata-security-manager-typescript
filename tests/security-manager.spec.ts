@@ -1,14 +1,11 @@
-import SecurityManager from "../src/security-manager";
+import { SecurityManager, ReversePasswordEncrypter } from "../src/security-manager";
 
-// Because the passwordEncrypt method is protected, you can't mock it directly. You can create a new class that extends the SecurityManager and override the passwordEncrypt method. Then, you can use the new class to test the createUser method.
+const makeSut = () => {
+  const passwordEncrypter = new ReversePasswordEncrypter();
+  const securityManager = new SecurityManager(passwordEncrypter);
 
-// So if you want mock the passwordEncrypt dependency, you can use the following code:
-class TestableSecurityManager extends SecurityManager {
-  static passwordEncrypt(password: string): string {
-    return `Encrypted: ${password}`;
-  }
+  return { securityManager };
 }
-
 const SuccessCase = () => {
   return jest.fn()
     .mockImplementationOnce(() => 'Guilherme')
@@ -54,8 +51,11 @@ jest.mock('prompt-sync', () => {
 
 describe('testing mock security manager', () => {
   it('should create a new user', () => {
+    const { securityManager } = makeSut()
     const consoleSpy = jest.spyOn(console, 'log')
-    SecurityManager.createUser()
+
+    securityManager.createUser()
+
     expect(consoleSpy).toBeCalledTimes(5)
     expect(consoleSpy).toHaveBeenNthCalledWith(1, 'Enter a username')
     expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Enter your full name')
@@ -65,8 +65,11 @@ describe('testing mock security manager', () => {
   })
 
   it('should alert if passwords do not match', () => {
+    const { securityManager } = makeSut()
     const consoleSpy = jest.spyOn(console, 'log')
-    SecurityManager.createUser()
+
+    securityManager.createUser()
+
     expect(consoleSpy).toBeCalledTimes(5)
     expect(consoleSpy).toHaveBeenNthCalledWith(1, 'Enter a username')
     expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Enter your full name')
@@ -76,24 +79,16 @@ describe('testing mock security manager', () => {
   })
 
   it('should alert if password does not have 8 characters', () => {
+    const { securityManager } = makeSut()
     const consoleSpy = jest.spyOn(console, 'log')
-    SecurityManager.createUser()
+
+    securityManager.createUser()
+
     expect(consoleSpy).toBeCalledTimes(5)
     expect(consoleSpy).toHaveBeenNthCalledWith(1, 'Enter a username')
     expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Enter your full name')
     expect(consoleSpy).toHaveBeenNthCalledWith(3, 'Enter your password')
     expect(consoleSpy).toHaveBeenNthCalledWith(4, 'Re-enter your password')
     expect(consoleSpy).toHaveBeenNthCalledWith(5, `Password must be at least 8 characters in length`)
-  })
-
-  it('should encrypt the password (testing with the override password encrypt method)', () => {
-    const consoleSpy = jest.spyOn(console, 'log')
-    TestableSecurityManager.createUser()
-    expect(consoleSpy).toBeCalledTimes(5)
-    expect(consoleSpy).toHaveBeenNthCalledWith(1, 'Enter a username')
-    expect(consoleSpy).toHaveBeenNthCalledWith(2, 'Enter your full name')
-    expect(consoleSpy).toHaveBeenNthCalledWith(3, 'Enter your password')
-    expect(consoleSpy).toHaveBeenNthCalledWith(4, 'Re-enter your password')
-    expect(consoleSpy).toHaveBeenNthCalledWith(5, `Saving Details for User (Guilherme, Guilherme Gomes, Encrypted: 12345678)\n`)
   })
 })
