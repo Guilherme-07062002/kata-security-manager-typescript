@@ -3,17 +3,17 @@ import promptSync from "prompt-sync";
 export default class SecurityManager {
   public static createUser() {
     const prompt = promptSync();
+
     console.log("Enter a username");
-
     const username = prompt('');
+
     console.log("Enter your full name");
-
     const fullName = prompt("");
+
     console.log("Enter your password");
-
     const password = prompt("");
-    console.log("Re-enter your password");
 
+    console.log("Re-enter your password");
     const confirmPassword = prompt("");
 
     if (password != confirmPassword) {
@@ -26,10 +26,9 @@ export default class SecurityManager {
       return;
     }
 
-    // Encrypt the password (just reverse it, should be secure)
-    const passwordreversed = this.passwordEncrypt(password);
+    const passwordEncrypted = this.passwordEncrypt(password);
 
-    console.log(`Saving Details for User (${username}, ${fullName}, ${passwordreversed})\n`);
+    console.log(`Saving Details for User (${username}, ${fullName}, ${passwordEncrypted})\n`);
   }
 
   protected static passwordEncrypt(password: string): string {
