@@ -1,58 +1,36 @@
-import { SecurityManager, ReversePasswordEncrypter } from "../src/security-manager";
+import { SecurityManager, PasswordEncrypter, Prompt } from "../src/security-manager";
+
+class MockPasswordEncrypter implements PasswordEncrypter {
+  encrypt: (password: string) => string = jest.fn().mockImplementation((password: string) => {
+    return password.split("").reverse().join("");
+  })
+}
+
+class MockPrompt implements Prompt {
+  getUserInput: () => string = jest.fn()
+}
 
 const makeSut = () => {
-  const passwordEncrypter = new ReversePasswordEncrypter();
-  const securityManager = new SecurityManager(passwordEncrypter);
+  const mockPasswordEncrypter = new MockPasswordEncrypter();
+  const mockPrompt = new MockPrompt();
+  const securityManager = new SecurityManager(mockPasswordEncrypter, mockPrompt);
 
-  return { securityManager };
+  return { securityManager, mockPasswordEncrypter, mockPrompt };
 }
-const SuccessCase = () => {
-  return jest.fn()
-    .mockImplementationOnce(() => 'Guilherme')
-    .mockImplementationOnce(() => 'Guilherme Gomes')
-    .mockImplementationOnce(() => '12345678')
-    .mockImplementationOnce(() => '12345678');
-}
-
-const passwordsDontMatchCase = () => {
-  return jest.fn()
-    .mockImplementationOnce(() => 'Guilherme')
-    .mockImplementationOnce(() => 'Guilherme Gomes')
-    .mockImplementationOnce(() => '12345679')
-    .mockImplementationOnce(() => '12345678');
-}
-
-const passwordDontHave8CharactersCase = () => {
-  return jest.fn()
-    .mockImplementationOnce(() => 'Guilherme')
-    .mockImplementationOnce(() => 'Guilherme Gomes')
-    .mockImplementationOnce(() => '1234567')
-    .mockImplementationOnce(() => '1234567');
-}
-
-var callCount = 0;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  callCount++;
-});
-
-jest.mock('prompt-sync', () => {
-  return jest.fn().mockImplementation(() => {
-    if (callCount === 2) return passwordsDontMatchCase();
-
-    if (callCount === 3) return passwordDontHave8CharactersCase();
-
-    if (callCount === 3) return SuccessCase();
-
-    return SuccessCase();
-  });
-});
+})
 
 describe('testing mock security manager', () => {
   it('should create a new user', () => {
-    const { securityManager } = makeSut()
+    const { securityManager, mockPrompt } = makeSut()
     const consoleSpy = jest.spyOn(console, 'log')
+    mockPrompt.getUserInput = jest.fn()
+      .mockReturnValueOnce('Guilherme')
+      .mockReturnValueOnce('Guilherme Gomes')
+      .mockReturnValueOnce('12345678')
+      .mockReturnValueOnce('12345678')
 
     securityManager.createUser()
 
@@ -65,7 +43,12 @@ describe('testing mock security manager', () => {
   })
 
   it('should alert if passwords do not match', () => {
-    const { securityManager } = makeSut()
+    const { securityManager, mockPrompt } = makeSut()
+    mockPrompt.getUserInput = jest.fn()
+      .mockReturnValueOnce('Guilherme')
+      .mockReturnValueOnce('Guilherme Gomes')
+      .mockReturnValueOnce('12345678')
+      .mockReturnValueOnce('12345679')
     const consoleSpy = jest.spyOn(console, 'log')
 
     securityManager.createUser()
@@ -79,8 +62,13 @@ describe('testing mock security manager', () => {
   })
 
   it('should alert if password does not have 8 characters', () => {
-    const { securityManager } = makeSut()
+    const { securityManager, mockPrompt } = makeSut()
     const consoleSpy = jest.spyOn(console, 'log')
+    mockPrompt.getUserInput = jest.fn()
+      .mockReturnValueOnce('Guilherme')
+      .mockReturnValueOnce('Guilherme Gomes')
+      .mockReturnValueOnce('1234567')
+      .mockReturnValueOnce('1234567')
 
     securityManager.createUser()
 
