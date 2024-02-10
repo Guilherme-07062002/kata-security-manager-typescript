@@ -3,7 +3,8 @@
   "version": "3.0.0",
   "description": "Base for testing with Jest and TS",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
