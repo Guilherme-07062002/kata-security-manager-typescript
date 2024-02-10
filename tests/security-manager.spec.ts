@@ -1,4 +1,5 @@
-import { SecurityManager, PasswordEncrypter, Prompt } from "../src/security-manager";
+import { SecurityManager } from "../src/security-manager";
+import { PasswordEncrypter, Prompt } from "../src/domain";
 
 class MockPasswordEncrypter implements PasswordEncrypter {
   encrypt: (password: string) => string = jest.fn().mockImplementation((password: string) => {
