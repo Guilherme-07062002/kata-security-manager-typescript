@@ -1,13 +1,6 @@
 import { PasswordEncrypter, Prompt } from "./domain";
 import promptSync from "prompt-sync";
 
-export class ReversePasswordEncrypter implements PasswordEncrypter {
-  encrypt(password: string): string {
-    const array = password.split("");
-    return array.reverse().join("");
-  }
-}
-
 export class PromptSyncAdapter implements Prompt {
   getUserInput(): string {
     const prompt = promptSync();
