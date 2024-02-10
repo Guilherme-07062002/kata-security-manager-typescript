@@ -4,12 +4,16 @@ export default class SecurityManager {
   public static createUser() {
     const prompt = promptSync();
     console.log("Enter a username");
+
     const username = prompt('');
     console.log("Enter your full name");
+
     const fullName = prompt("");
     console.log("Enter your password");
+
     const password = prompt("");
     console.log("Re-enter your password");
+
     const confirmPassword = prompt("");
 
     if (password != confirmPassword) {
@@ -25,15 +29,11 @@ export default class SecurityManager {
     // Encrypt the password (just reverse it, should be secure)
     const passwordreversed = this.passwordEncrypt(password);
 
-    console.log(
-      `Saving Details for User (${username}, ${fullName}, ${passwordreversed.join(
-        ""
-      )})\n`
-    );
+    console.log(`Saving Details for User (${username}, ${fullName}, ${passwordreversed})\n`);
   }
 
-  protected static passwordEncrypt(password: string) {
+  protected static passwordEncrypt(password: string): string {
     const array = password.split("");
-    return array.reverse();
+    return array.reverse().join("");
   }
 }

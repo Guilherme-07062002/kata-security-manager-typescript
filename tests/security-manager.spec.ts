@@ -4,8 +4,8 @@ import SecurityManager from "../src/security-manager";
 
 // So if you want mock the passwordEncrypt dependency, you can use the following code:
 class TestableSecurityManager extends SecurityManager {
-  static passwordEncrypt(password: string): string[] {
-    return [`Encrypted: ${password}`];
+  static passwordEncrypt(password: string): string {
+    return `Encrypted: ${password}`;
   }
 }
 
